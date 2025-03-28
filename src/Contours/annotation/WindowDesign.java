@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import Contours.niftijio.NiftiVolume;
 import org.opencv.core.Mat;
 import Contours.Components.Slider.*;
+import org.opencv.core.Core;
 
 /*
  * @author(s) Andy C, Aidan C, James T
@@ -300,7 +301,6 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
         jButtonDoWatershed = new JButton();
         jButtonSelect = new JButton();
         jButtonDoLevelset = new JButton();
-        
 
         maskPath = new JTextField();
         dicomPath = new JTextField();
@@ -718,7 +718,7 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
      */
     private void FunctionLayout() {
 
-        box = new JComboBox(array);     
+        box = new JComboBox(array);
         box.setRenderer(rendrar);
         box.addActionListener(new ActionListener() {
             @Override
@@ -897,7 +897,7 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
 //                    jimgpanel = new CustomImgPanel(850, 800, transparency, pagenum, wd);
 //                    jimgpanels = new CustomImgPanel[nift.length];
 //                    for (int i = 0; i < nift.length; i++) {
-////                        jimgpanels[i] = new CustomImgPanel(850, 800, transparency, i, wd);
+        ////                        jimgpanels[i] = new CustomImgPanel(850, 800, transparency, i, wd);
 //                    }
 ////                    sp = new scrollablePanels(wd, jimgpanels);
 ////                    jSplitPane1.setRightComponent(sp);
@@ -1061,8 +1061,8 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
         txtwtsdlowthreshold.setPreferredSize(new Dimension(100, 30));
         jButtonDoWatershed.setPreferredSize(new Dimension(100, 50));
         jButtonDoWatershed.setText("Apply");
+        loadOpenCV_Lib();
         jButtonDoWatershed.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!txtwtsdhighthreshold.getText().isEmpty() || !txtwtsdlowthreshold.getText().isEmpty() || !txtklengthx.getText().isEmpty() || !txtklengthy.getText().isEmpty()) {
@@ -1158,7 +1158,7 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
                                     jimgpanels[k].add(jlb1);
                                     sp.setVisible(false);
                                     sp.remove(sp.cips[k]);
-                                    wd.pagenum=k;
+                                    wd.pagenum = k;
                                     sp.add(sp.cips[wd.pagenum], BorderLayout.CENTER);
                                     sp.setVisible(true);
 
@@ -1512,7 +1512,7 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
         } catch (UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(WindowDesign.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-
+        loadOpenCV_Lib();
         /* Create and display the form */
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -1523,6 +1523,15 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
                 }
             }
         });
+    }
+
+    public static void loadOpenCV_Lib() {
+        try {
+            System.load("C:\\Users\\WYL\\Documents\\opencv\\build\\java\\x64\\opencv_java341.dll");
+            System.out.println("OpenCV library loaded successfully.");
+        } catch (UnsatisfiedLinkError e) {
+            System.err.println("Failed to load OpenCV library: " + e.getMessage());
+        }
     }
 
     /*
@@ -1621,7 +1630,7 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
     protected Scrollbar sidescroll;
     protected JFrame jFrameHessian, jFrameWarning;
     protected hessianImgPanel hip;
-    protected JLabel initial, maxlvl, minlvl, transparencylvl, lblCurrentPics, lblwinradius, lblmappingpower, lblalpha, lblnullCT, lblthresholdset, lblretreatratio, lblfilter, lblsegtime, lblwtsdhighthreshold, lblwtsdlowthreshold, lblwarning, lblklengthx, lblklengthy, lbliternum, lbllambdal, lblnu, lblmu, lbltimestep, lblepsilon,jSpinnerMaxWindowsLvl, jSpinnerMinWindowsLvl,jSpinnerTransparency;
+    protected JLabel initial, maxlvl, minlvl, transparencylvl, lblCurrentPics, lblwinradius, lblmappingpower, lblalpha, lblnullCT, lblthresholdset, lblretreatratio, lblfilter, lblsegtime, lblwtsdhighthreshold, lblwtsdlowthreshold, lblwarning, lblklengthx, lblklengthy, lbliternum, lbllambdal, lblnu, lblmu, lbltimestep, lblepsilon, jSpinnerMaxWindowsLvl, jSpinnerMinWindowsLvl, jSpinnerTransparency;
     protected JPanel jPanelBotMenuTool, jPanellisttop, jPanelTopMenuTool, jPanelmiddleworshop, jPanelFreeAnnotation, jPanelHessianMethod, jPanelImgDisplay, jPanelHessianImgAction, jPanelRunOption, jPanelHessianRadioSpin, jPanelWatershed, jPanelWarning, jPanelLevelset;
     protected JScrollPane HessianContainer, jPanelHessianRadioButtons;
     protected RangeSlider jSliderMaxWindowsLvl, jSliderMinWindowsLvl;

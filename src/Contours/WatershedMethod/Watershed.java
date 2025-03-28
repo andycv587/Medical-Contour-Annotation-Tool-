@@ -284,5 +284,5 @@ public class Watershed {
     public Vector<Mask> getMasks() {
         return masks;
     }
-
+    
 }
