@@ -7,11 +7,16 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Vector;
 import java.util.logging.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.border.LineBorder;
 import Contours.HessianDomainMethod.*;
 import Contours.WatershedMethod.Watershed;
+import Contours.WatershedMethod.ResultData;
 import javax.imageio.ImageIO;
 import Contours.niftijio.NiftiVolume;
 import org.opencv.core.Mat;
@@ -1048,8 +1053,24 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
                         )
         );
     }
+    
+    protected class ResultData {
+        public int sliceIndex;
+        public Vector<JLabel[]> fromwtsd;
+        public Vector<Point> coodinates;
+        public Vector<int[]> msksizes;
+
+        public ResultData(int sliceIndex, Vector<JLabel[]> fromwtsd, Vector<Point> coodinates, Vector<int[]> msksizes) {
+            this.sliceIndex = sliceIndex;
+            this.fromwtsd = fromwtsd;
+            this.coodinates = coodinates;
+            this.msksizes = msksizes;
+        }
+    }
+ 
 
     private void WatershedWindow() {
+
         JRBISAll.setText("Apply All?");
         JRBISAll.addActionListener(new ActionListener() {
             @Override
@@ -1057,6 +1078,7 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
                 isapplyall = true;
             }
         });
+
         txtwtsdhighthreshold.setPreferredSize(new Dimension(100, 30));
         txtwtsdlowthreshold.setPreferredSize(new Dimension(100, 30));
         jButtonDoWatershed.setPreferredSize(new Dimension(100, 50));
@@ -1067,10 +1089,11 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
             public void actionPerformed(ActionEvent e) {
                 if (!txtwtsdhighthreshold.getText().isEmpty() || !txtwtsdlowthreshold.getText().isEmpty() || !txtklengthx.getText().isEmpty() || !txtklengthy.getText().isEmpty()) {
                     System.out.println("Entered 1068");
-                    klengthx = Integer.valueOf(txtklengthx.getText());
-                    klengthy = Integer.valueOf(txtklengthy.getText());
-                    highthreshold = Integer.valueOf(txtwtsdhighthreshold.getText());
-                    lowthreshold = Integer.valueOf(txtwtsdlowthreshold.getText());
+                    final int klengthx = Integer.valueOf(txtklengthx.getText());
+                    final int klengthy = Integer.valueOf(txtklengthy.getText());
+                    final int highthreshold = Integer.valueOf(txtwtsdhighthreshold.getText());
+                    final int lowthreshold = Integer.valueOf(txtwtsdlowthreshold.getText());
+                    
                     if (isapplyall == false) {
                         try {
                             Mat mt = util.bufferToMartix(nift[pagenum]);
@@ -1126,27 +1149,37 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
                             Logger.getLogger(WindowDesign.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
+                        final int numThreads = Runtime.getRuntime().availableProcessors();
+                        final ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+                        final int currentColorIdx = coloridx;
+                        final java.util.List<ResultData> results = new java.util.Vector<>();
+                        final CountDownLatch latch = new CountDownLatch(nift.length);
+
                         for (int k = 0; k < nift.length; k++) {
-                            try {
-                                Mat mt = util.bufferToMartix(nift[k]);
-                                Watershed wtsd = new Watershed(klengthx, klengthy, highthreshold, lowthreshold, mt, jimgpanels[k]);
-                                fromwtsd = new Vector<JLabel[]>();
-                                coodinates = new Vector<Point>();
-                                msksizes = new Vector<int[]>();
+                            final int sliceIndex = k;
+                            executor.submit(() -> {
+                                try {
+                                    Mat mt = util.bufferToMartix(nift[sliceIndex]);
+                                    Watershed wtsd = new Watershed(klengthx, klengthy, highthreshold, lowthreshold, mt, jimgpanels[sliceIndex]);
+                                    Vector<JLabel[]> localFromwtsd = new Vector<>();
+                                    Vector<Point> localCoodinates = new Vector<>();
+                                    Vector<int[]> localMsksizes = new Vector<>();
 
-                                wtsd.run();
-
-                                Vector<Mask> msks = wtsd.getMasks();
-                                for (int i = 0; i < msks.size(); i++) {
-                                    System.out.println("this is " + i);
-                                    Mask mk = msks.get(i);
-                                    fromwtsd.add(mk.makeMask(colorchoice[coloridx]));
-                                    coodinates.add(mk.getLeftTopCorner());
-                                    int arr[] = {mk.nw, mk.nh};
-                                    msksizes.add(arr);
-//                                mk.saveResizedmask("D:\\exp\\msk_1\\a_" + i + ".png");
-                                }
-
+                                    wtsd.run();
+                                    Vector<Mask> msks = wtsd.getMasks();
+                                    for (int i = 0; i < msks.size(); i++) {
+                                        System.out.println("Slice " + sliceIndex + "- processing mask " + i);
+                                        Mask mk = msks.get(i);
+                                        localFromwtsd.add(mk.makeMask(colorchoice[currentColorIdx]));
+                                        localCoodinates.add(mk.getLeftTopCorner());
+                                        int arr[] = {mk.nw, mk.nh};
+                                        localMsksizes.add(arr);
+//                                      //mk.saveResizedmask("D:\\exp\\msk_1\\a_" + i + ".png");
+                                    }
+                                    ResultData data = new ResultData(sliceIndex, localFromwtsd, localCoodinates, localMsksizes);
+                                    results.add(data);
+                                    System.out.println("slice " + sliceIndex + "processing finish successfully");
+                                    /*
                                 for (int i = 0; i < fromwtsd.size(); i++) {
                                     JLabel jlb1 = fromwtsd.get(i)[0];
                                     int x = coodinates.get(i).x;
@@ -1162,7 +1195,7 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
                                     sp.add(sp.cips[wd.pagenum], BorderLayout.CENTER);
                                     sp.setVisible(true);
 
-                                    /*below adding actionlisteners*/
+                                    /*below adding actionlisteners
                                     jlb1.addMouseMotionListener(new MouseMotionListener() {
                                         @Override
                                         public void mouseDragged(MouseEvent e) {
@@ -1177,13 +1210,56 @@ public class WindowDesign extends JFrame implements MouseWheelListener {
                                     });
 
                                 }
-
-                            } catch (Exception ex) {
-                                Logger.getLogger(WindowDesign.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                                     */
+                                } catch (Exception ex) {
+                                    Logger.getLogger(WindowDesign.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
                         }
-                    }
+                        executor.shutdown();
 
+                        try {
+                            boolean allCompleted = latch.await(60, TimeUnit.SECONDS);
+                            if (allCompleted){
+                                System.out.println("All slices processed successfully. Updating UI now");
+                            } else {
+                                System.err.println("Timeout");
+                            }
+                        } catch (InterruptedException ex){
+                            Logger.getLogger(WindowDesign.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        SwingUtilities.invokeLater(() -> {
+                            for (ResultData data : results) {
+                                int k = data.sliceIndex;
+                                for (int i = 0; i < data.fromwtsd.size(); i++) {
+                                    JLabel jlb1 = data.fromwtsd.get(i)[0];
+                                    int x = data.coodinates.get(i).x;
+                                    int y = data.coodinates.get(i).y;
+
+                                    jlb1.setLocation(x, y);
+                                    jimgpanels[k].add(jlb1);
+
+                                    jlb1.addMouseMotionListener(new MouseMotionListener() {
+                                        @Override
+                                        public void mouseDragged(MouseEvent e) {
+
+                                        }
+
+                                        @Override
+                                        public void mouseMoved(MouseEvent e) {
+
+                                        }
+                                    });
+                                }
+                                jimgpanels[k].revalidate();
+                                jimgpanels[k].repaint();
+                            }
+                            sp.revalidate();
+                            sp.repaint();
+                            sp.setVisible(false);
+                            sp.setVisible(true);
+                        });
+                    }
                 } else {
                     WarningWindow("error!!! not enough info, please fill all blanks");
                 }
