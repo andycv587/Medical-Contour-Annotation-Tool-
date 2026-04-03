@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+
+# Local / bridge test artifacts
+python_app/.tmp_bridge_test/
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Large local sample volumes (do not commit)
+*.nii
+*.nii.gz
