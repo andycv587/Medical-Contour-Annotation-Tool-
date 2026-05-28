@@ -1,0 +1,6 @@
+{
+  "name": "backend_ablation",
+  "mode": "requires_real_data",
+  "conditions": ["classical", "cellpose", "langsam_medsam", "full_agentic_workflow"],
+  "status": "TEMPLATE_ONLY_NOT_RUN"
+}

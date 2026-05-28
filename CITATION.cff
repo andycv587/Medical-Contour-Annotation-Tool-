@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "An agent-routed and memory-augmented annotation workflow for biomedical and bioimage segmentation"
+version: 0.1.0
+date-released: 2026-05-03
+authors:
+  - family-names: "TO_BE_FILLED"
+    given-names: "TO_BE_FILLED"
+repository-code: "TO_BE_FILLED_GITHUB_URL"
+license: MIT

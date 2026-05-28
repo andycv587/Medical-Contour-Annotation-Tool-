@@ -1,0 +1,5 @@
+{
+  "name": "mock_smoke_ablation",
+  "mode": "mock_smoke",
+  "status": "CI_SYNTHETIC_ONLY"
+}

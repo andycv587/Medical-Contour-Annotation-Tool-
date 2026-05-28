@@ -1,0 +1,15 @@
+{
+  "name": "msd_subset_template",
+  "dataset": "msd_subset",
+  "data_root": "TO_BE_SET",
+  "dataset_manifest": "configs/datasets.example.yaml",
+  "directory_format": {
+    "images": "images/*.nii.gz",
+    "masks": "masks/*.nii.gz"
+  },
+  "priority": "MSD subset first",
+  "optional_templates": ["BTCV", "FLARE"],
+  "supported_examples": ["MSD", "BTCV", "FLARE"],
+  "auto_download": false,
+  "status": "TEMPLATE_ONLY_NOT_RUN"
+}

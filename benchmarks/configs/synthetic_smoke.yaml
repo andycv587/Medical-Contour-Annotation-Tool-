@@ -1,0 +1,12 @@
+{
+  "name": "synthetic_smoke",
+  "dataset": "synthetic_smoke",
+  "workflow": {
+    "use_router": true,
+    "memory_mode": "no_memory"
+  },
+  "outputs": {
+    "save_masks": true,
+    "save_provenance": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "models": {
+    "langsam": {
+      "id": "langsam_local",
+      "backend": "langsam",
+      "enabled": false,
+      "backend_mode": "external_command",
+      "command": "python path/to/langsam_bridge.py",
+      "repo_path": "path/to/lang-segment-anything",
+      "checkpoint_path": "path/to/checkpoint",
+      "checkpoint_sha256": "sha256_here",
+      "source_url": "official_source_url_here",
+      "license": "license_here",
+      "device": "cuda_or_cpu",
+      "python_executable": "python",
+      "extra_args": [],
+      "status": "NOT_CONFIGURED"
+    }
+  }
+}

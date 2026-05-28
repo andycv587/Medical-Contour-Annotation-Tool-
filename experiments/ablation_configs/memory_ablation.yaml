@@ -1,0 +1,6 @@
+{
+  "name": "memory_ablation",
+  "mode": "requires_real_data",
+  "conditions": ["no_memory", "short_term_memory", "long_term_memory"],
+  "status": "TEMPLATE_ONLY_NOT_RUN"
+}

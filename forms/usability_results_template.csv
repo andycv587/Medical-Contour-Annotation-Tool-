@@ -1,0 +1,4 @@
+participant_id,case_id,task_order,condition,task_start_iso,task_end_iso,completion_time_sec,prompt_count,click_count,correction_count,preview_accept_count,preview_reject_count,selected_backend,fallback_count,dice,iou,subjective_usability_rating,failure_notes,status
+TO_BE_FILLED,TO_BE_FILLED,TO_BE_FILLED,manual_contouring_only,TO_BE_FILLED,TO_BE_FILLED,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,TO_BE_FILLED,TO_BE_FILLED,NOT_RUN
+TO_BE_FILLED,TO_BE_FILLED,TO_BE_FILLED,model_assisted_no_router,TO_BE_FILLED,TO_BE_FILLED,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,TO_BE_FILLED,TO_BE_FILLED,NOT_RUN
+TO_BE_FILLED,TO_BE_FILLED,TO_BE_FILLED,agentic_router_memory,TO_BE_FILLED,TO_BE_FILLED,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,TO_BE_FILLED,TO_BE_FILLED,NOT_RUN

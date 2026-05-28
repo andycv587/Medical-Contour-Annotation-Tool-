@@ -1,0 +1,22 @@
+name: "microscopy_cellpose_or_bbbc_local_template"
+dataset: "microscopy"
+dataset_registry_path: "configs/datasets.local.yaml"
+model_registry_path: "configs/model_registry.local.yaml"
+output_dir: "results/microscopy_cellpose_or_bbbc"
+max_cases: 5
+target_label: null
+backend_candidates:
+  - cellpose
+  - classical
+prompt_strategy:
+  - automatic
+  - optional_text_prompt
+memory_mode: "no_memory"
+save_masks: true
+save_provenance: true
+allow_mock_backend: false
+allow_classical_baseline: true
+allow_classical_only: true
+instance_masks: true
+text_prompt: "cells nuclei"
+status: "NOT_CONFIGURED"

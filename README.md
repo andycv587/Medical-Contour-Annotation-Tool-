@@ -1,115 +1,213 @@
 # Medical Contour Annotation Tool
 
-Desktop medical contour annotation for 3D NIfTI volumes. The application lives in `python_app/` (Tkinter).
+An agent-routed and memory-augmented annotation workflow for biomedical and bioimage segmentation.
 
-## Quick Start (Windows)
+This repository contains a lightweight Tkinter desktop annotator plus headless benchmarking utilities. The intended software-paper contribution is not another segmentation GUI, but a reproducible workflow that combines:
+
+- language-guided prompting through LangSAM-compatible bridges
+- 2D medical bbox prompting through MedSAM-compatible bridges
+- 3D volume propagation through MedSAM2-compatible bridges
+- microscopy/cell segmentation through Cellpose when available, with a lightweight fallback
+- classical watershed/levelset baselines
+- transparent agentic routing and fallback logs
+- short-term and long-term prompt/mask geometry memory
+- provenance sidecars for exported masks
+- headless synthetic smoke benchmarks and real-dataset templates
+
+No benchmark numbers in this repository are fabricated. Synthetic smoke results are only for validation of the software path; real public-dataset experiments require user-provided data and checkpoints.
+
+## Quick Start
+
+Lightweight install:
+
+```powershell
+python -m pip install -e .
+```
+
+Run tests:
+
+```powershell
+make test
+```
+
+If GNU Make is unavailable on Windows, run `pytest -q` directly.
+
+Run the synthetic headless benchmark:
+
+```powershell
+make benchmark-smoke
+```
+
+If GNU Make is unavailable on Windows, run the benchmark command shown in the Headless Benchmark section.
+
+Check backend availability:
+
+```powershell
+python -m app.backends.check
+```
+
+Optional model setup helpers and public dataset links are documented in [Model setup and public data](docs/model_setup_and_public_data.md). The Windows helper keeps heavy backend dependencies isolated under `.model_envs/`:
+
+```powershell
+.\scripts\setup_model_envs.ps1 -Cellpose
+.\scripts\setup_model_envs.ps1 -LangSAM -Torch cu124
+.\scripts\setup_model_envs.ps1 -MedSAM2 -Torch cu124
+```
+
+Validate local real-evidence templates without running experiments:
+
+```powershell
+python -m app.configs.validate --models configs/model_registry.local.template.yaml --datasets configs/datasets.local.template.yaml
+```
+
+Generate local config files from an answer template:
+
+```powershell
+python scripts/create_local_config_from_answers.py --answers configs/andy_real_run_answers.template.yaml --output-dir configs
+```
+
+The generator refuses to overwrite existing `*.local.yaml` files unless `--force` is passed.
+
+Launch the GUI:
+
+```powershell
+python python_app\main.py
+```
+
+Run the lightweight reviewer verification script:
+
+```powershell
+python scripts/verify_lightweight_install.py
+```
+
+On Windows, the legacy launcher is still available:
 
 ```powershell
 python_app\run_python_app.bat
 ```
 
-Or manually:
+## Repository Map
+
+- `python_app/`: existing Tkinter GUI and legacy app bridges
+- `segmentation/backends/`: common backend API and LangSAM, MedSAM, MedSAM2, Cellpose, classical, mock backends
+- `agent/`: deterministic routing rules, transparent routing decisions, fallback workflow
+- `memory/`: schema and store for prompt/geometry/result memory without raw image pixels by default
+- `provenance/`: run-level provenance schema, sidecar writer, session logger, inspect CLI
+- `contour_io/`: mask, contour, COCO, NIfTI, and TIFF export/import helpers
+- `benchmarks/`: headless benchmark runner, metrics, synthetic data, real-dataset templates
+- `experiments/`: ablation runner and configs
+- `docs/`: reviewer quickstart, baseline protocols, reproducibility checklist, limitations
+- `paper_assets/`: table, figure, and software note templates with `NOT_RUN` placeholders where needed
+
+## Backend Modes
+
+### Lightweight Mode
+
+The default install avoids heavy model dependencies and checkpoints. It supports:
+
+- mock backend for CI and tests
+- classical watershed/levelset backend
+- Cellpose-style microscopy fallback when Cellpose is not installed
+- external command wrappers for LangSAM, MedSAM, and MedSAM2 that fail gracefully if not configured
+
+### Full Model Mode
+
+Install optional dependencies and configure checkpoint/command paths:
 
 ```powershell
-python -m pip install -r python_app\requirements.txt
-python python_app\main.py
+make install-heavy
 ```
 
-## Python Dependencies
+Useful environment variables:
 
-- `numpy`
-- `nibabel`
-- `pillow`
-- `opencv-python-headless`
+- `LANGSAM_INFER_CMD`: external LangSAM bridge command
+- `MEDSAM_INFER_CMD`: external MedSAM bridge command
+- `MEDSAM2_INFER_CMD`: external MedSAM2 bridge command
+- `MEDSAM_CHECKPOINT`: MedSAM checkpoint path
+- `MEDSAM2_CHECKPOINT`: MedSAM2 checkpoint path
+- `SEGMENTATION_DEVICE`: `cpu`, `cuda`, or backend-specific value
+- `MEMORY_STORE_PATH`: optional long-term memory JSON path
+- `RUN_HEAVY_TESTS=1`: enable tests that require real model assets
 
-## Core Features
+The external bridge protocol uses `.npy` image inputs, JSON request files, and `.npy` mask outputs. The included wrappers report missing dependencies and checkpoints instead of crashing the GUI or benchmark runner.
 
-- 3D NIfTI loading (`.nii` / `.nii.gz`) with slice browsing
-- Window/Level + Threshold + Opaque controls
-- Polygon annotation with undo/redo
-- Selection-based delete/edit of overlays
-- Label/color/layer metadata per mask
-- Layer filtering (`View Layer`)
-- Watershed + Levelset (current/all, preview/apply)
-- Export masks to PNG and NIfTI
+## Headless Benchmark
 
-## Annotation UX
+Synthetic smoke benchmark:
 
-- `Start Annotation` to enter draw mode
-- Left click: add polygon points
-- Finish polygon: `Double-click`, `Enter`, `Right-click`, or `Finish Polygon`
-- Cancel current polygon: `Esc` or `Cancel Polygon`
-- Right-click selected overlay for context actions:
-  - delete
-  - set label
-  - set color
-  - set layer
-
-## AI Backends
-
-`AI Agent` tab supports:
-
-- `LangSAM` (text prompt segmentation)
-- `MedSAM` (2D prompt-driven path)
-- `MedSAM2` (3D volume path)
-
-### LangSAM Notes
-
-`LangSAM` is used for text-prompt segmentation and can also generate sparse text seeds for MedSAM2 3D propagation.
-
-Repository/reference:
-
-- [luca-medeiros/lang-segment-anything](https://github.com/luca-medeiros/lang-segment-anything)
-
-### MedSAM Command Bridge (2D)
-
-Set `MedSAM Cmd` in UI to an external command implementing:
-
-```text
-<cmd> --input <input.npy> --request <request.json> --output <output.npy>
+```powershell
+python benchmarks/run_benchmark.py --config benchmarks/configs/synthetic_smoke.yaml --output results/synthetic_smoke
 ```
 
-- input: 2D `(H, W)` uint8 slice
-- output: `(H, W)` or `(N, H, W)` binary mask(s)
+Expected outputs:
 
-Stub included:
+- `metrics.csv`
+- `per_case_results.jsonl`
+- `backend_status.json`
+- `routing_decisions.jsonl`
+- `provenance/`
+- `masks/`
+- `figures/`
+- `report.md`
 
-- `python_app/medsam_bridge_stub.py`
+Real-dataset templates are provided for medical 3D and microscopy benchmarks:
 
-### MedSAM2 Command Bridge (3D)
+- `benchmarks/configs/medical_3d_template.yaml`
+- `benchmarks/configs/microscopy_template.yaml`
+- `benchmarks/configs/medical_3d_msd_local.template.yaml`
+- `benchmarks/configs/microscopy_cellpose_or_bbbc_local.template.yaml`
 
-Set `MedSAM2 Cmd` in UI to an external command implementing:
+These templates intentionally do not auto-download large datasets. Provide dataset paths and model checkpoints before using them for paper results.
 
-```text
-<cmd> --mode volume --input <input_volume.npy> --request <request.json> --output <output_volume.npy>
+Run preflight before real-data benchmarks:
+
+```powershell
+python -m app.experiments.preflight --models configs/model_registry.local.yaml --datasets configs/datasets.local.yaml --experiment medical_3d
+python -m app.experiments.preflight --models configs/model_registry.local.yaml --datasets configs/datasets.local.yaml --experiment microscopy
 ```
 
-- input: 3D `(Z, H, W)` uint8 volume
-- output: 3D `(Z, H, W)` binary mask volume
+Preflight on unedited templates is expected to fail safely and write `results/PREFLIGHT_FAILED.md`.
 
-Stub included:
+## Validation
 
-- `python_app/medsam2_bridge_stub.py`
+Run the legacy GUI-adjacent validation script:
 
-## MedSAM2 3D Workflow (Recommended)
+```powershell
+python python_app\validate_agentic_workflow.py
+```
 
-1. Draw committed masks on a few key slices (seed slices)
-2. In `AI Agent`, select `MedSAM2`
-3. Enable `Use 3D Seed Prompts`
-4. Optional: set `Seed Labels` (`All` or comma-separated labels like `liver,tumor`)
-5. Optional: enable `Use LangSAM Text Seeds` and set `LangSAM Seed Stride`
-6. Run `Preview All` or `Apply All`
+Run package tests:
 
-The app supports hybrid prompts for MedSAM2:
+```powershell
+pytest -q
+```
 
-- manual seed volume (from committed masks)
-- optional LangSAM text seeds
-- optional current-slice bbox anchor
-- internal seed densification/propagation before bridge inference
+Heavy tests must be marked with `@pytest.mark.heavy` and are skipped unless:
 
-## UI / Rendering Notes
+```powershell
+$env:RUN_HEAVY_TESTS = "1"
+```
 
-- Left control pane is scrollable (scrollbar + mouse wheel)
-- Overlays are alpha-composited over base slice (does not erase base image)
-- `Opaque` controls overlay transparency for committed and preview masks
-- `Show Committed` / `Show Preview` control overlay layers independently
+## Documentation For Reviewers
+
+- [Reviewer quickstart](docs/reviewer_quickstart.md)
+- [Repository audit](docs/repo_audit.md)
+- [Reproducibility checklist](docs/reproducibility_checklist.md)
+- [Availability statement template](docs/availability_statement.md)
+- [Baseline comparison protocol](docs/baselines.md)
+- [Usability study protocol](docs/usability_study_protocol.md)
+- [DICOM/RTSTRUCT limitations](docs/dicom_rtstruct_limitations.md)
+- [Benchmark README](benchmarks/README.md)
+- [Ablation README](experiments/README.md)
+- [Software note outline](paper_assets/software_note_outline.md)
+
+## Current Limitations
+
+- Real LangSAM, MedSAM, and MedSAM2 inference requires external installations/checkpoints or bridge commands.
+- Public-dataset benchmark results are not included and must be run by the authors.
+- DICOM SEG and RTSTRUCT export are documented as future work, not claimed as implemented.
+- Synthetic smoke outputs demonstrate software execution only; they are not evidence of real biomedical segmentation accuracy.
+
+## License And Citation
+
+See `LICENSE` and `CITATION.cff`. Fill the remaining project metadata placeholders before public release.

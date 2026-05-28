@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "medical_3d": [
+    {
+      "name": "msd_subset",
+      "dataset_family": "MSD",
+      "images_dir": "NOT_CONFIGURED",
+      "masks_dir": "NOT_CONFIGURED",
+      "image_pattern": "*.nii.gz",
+      "mask_pattern": "*.nii.gz",
+      "modality": "medical_3d",
+      "label_map": {},
+      "license": "NOT_CONFIGURED",
+      "source_url": "NOT_CONFIGURED",
+      "split": "NOT_CONFIGURED",
+      "status": "NOT_CONFIGURED"
+    },
+    {
+      "name": "btcv_optional",
+      "dataset_family": "BTCV",
+      "images_dir": "NOT_CONFIGURED",
+      "masks_dir": "NOT_CONFIGURED",
+      "image_pattern": "*.nii.gz",
+      "mask_pattern": "*.nii.gz",
+      "modality": "ct",
+      "label_map": {},
+      "license": "NOT_CONFIGURED",
+      "source_url": "NOT_CONFIGURED",
+      "split": "NOT_CONFIGURED",
+      "status": "TEMPLATE_ONLY_NOT_RUN"
+    }
+  ],
+  "microscopy": [
+    {
+      "name": "cellpose_or_bbbc",
+      "dataset_family": "Cellpose",
+      "images_dir": "NOT_CONFIGURED",
+      "masks_dir": "NOT_CONFIGURED",
+      "image_pattern": "*.tif",
+      "mask_pattern": "*.tif",
+      "instance_masks": true,
+      "channels": ["grayscale"],
+      "license": "NOT_CONFIGURED",
+      "source_url": "NOT_CONFIGURED",
+      "split": "NOT_CONFIGURED",
+      "status": "NOT_CONFIGURED"
+    },
+    {
+      "name": "monuseg_optional",
+      "dataset_family": "MoNuSeg",
+      "images_dir": "NOT_CONFIGURED",
+      "masks_dir": "NOT_CONFIGURED",
+      "image_pattern": "*.tif",
+      "mask_pattern": "*.tif",
+      "instance_masks": false,
+      "channels": ["rgb"],
+      "license": "NOT_CONFIGURED",
+      "source_url": "NOT_CONFIGURED",
+      "split": "NOT_CONFIGURED",
+      "status": "TEMPLATE_ONLY_NOT_RUN"
+    }
+  ]
+}

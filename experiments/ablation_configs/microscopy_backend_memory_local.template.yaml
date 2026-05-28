@@ -1,0 +1,28 @@
+name: "microscopy_backend_memory_local_template"
+mode: "real_data"
+dataset: "microscopy"
+dataset_registry_path: "configs/datasets.local.yaml"
+model_registry_path: "configs/model_registry.local.yaml"
+benchmark_config: "benchmarks/configs/microscopy_cellpose_or_bbbc_local.yaml"
+output_dir: "results/microscopy_ablation"
+allow_mock_backend: false
+conditions:
+  - name: "classical_watershed"
+    backend_candidates: [classical]
+    memory_mode: "no_memory"
+  - name: "cellpose"
+    backend_candidates: [cellpose]
+    memory_mode: "no_memory"
+  - name: "router_off"
+    backend_candidates: [classical]
+    memory_mode: "no_memory"
+  - name: "router_on"
+    backend_candidates: [cellpose, classical]
+    memory_mode: "no_memory"
+  - name: "no_memory"
+    backend_candidates: [cellpose, classical]
+    memory_mode: "no_memory"
+  - name: "session_memory"
+    backend_candidates: [cellpose, classical]
+    memory_mode: "short_term_memory"
+status: "NOT_CONFIGURED"

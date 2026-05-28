@@ -1,0 +1,6 @@
+{
+  "name": "router_ablation",
+  "mode": "requires_real_data",
+  "conditions": ["router_off", "router_on"],
+  "status": "TEMPLATE_ONLY_NOT_RUN"
+}

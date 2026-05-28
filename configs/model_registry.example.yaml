@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "models": [
+    {
+      "id": "langsam_default",
+      "backend": "langsam",
+      "integration": "external_command",
+      "command_env": "LANGSAM_INFER_CMD",
+      "checkpoint_path": "TO_BE_CONFIGURED",
+      "checkpoint_version": "TO_BE_CONFIGURED",
+      "source_url": "TO_BE_CONFIGURED",
+      "license": "TO_BE_CONFIGURED",
+      "sha256": "TO_BE_CONFIGURED",
+      "device": "optional: cpu/cuda",
+      "status": "NOT_CONFIGURED"
+    },
+    {
+      "id": "medsam_default",
+      "backend": "medsam",
+      "integration": "external_command",
+      "command_env": "MEDSAM_INFER_CMD",
+      "checkpoint_path": "TO_BE_CONFIGURED",
+      "checkpoint_version": "TO_BE_CONFIGURED",
+      "source_url": "TO_BE_CONFIGURED",
+      "license": "TO_BE_CONFIGURED",
+      "sha256": "TO_BE_CONFIGURED",
+      "device": "optional: cpu/cuda",
+      "status": "NOT_CONFIGURED"
+    },
+    {
+      "id": "medsam2_default",
+      "backend": "medsam2",
+      "integration": "external_command",
+      "command_env": "MEDSAM2_INFER_CMD",
+      "checkpoint_path": "TO_BE_CONFIGURED",
+      "checkpoint_version": "TO_BE_CONFIGURED",
+      "source_url": "TO_BE_CONFIGURED",
+      "license": "TO_BE_CONFIGURED",
+      "sha256": "TO_BE_CONFIGURED",
+      "device": "optional: cpu/cuda",
+      "status": "NOT_CONFIGURED"
+    },
+    {
+      "id": "cellpose_default",
+      "backend": "cellpose",
+      "integration": "python_optional_dependency",
+      "command_env": "",
+      "checkpoint_path": "optional_builtin_or_TO_BE_CONFIGURED",
+      "checkpoint_version": "TO_BE_CONFIGURED",
+      "source_url": "TO_BE_CONFIGURED",
+      "license": "TO_BE_CONFIGURED",
+      "sha256": "optional_builtin_or_TO_BE_CONFIGURED",
+      "device": "optional: cpu/cuda",
+      "status": "NOT_CONFIGURED"
+    }
+  ]
+}
