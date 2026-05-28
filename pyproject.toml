@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bioimage-contour-annotator"
+version = "0.1.0"
+description = "Agent-routed and memory-augmented biomedical contour annotation workflow"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "TO_BE_FILLED"}]
+dependencies = [
+  "numpy",
+  "nibabel",
+  "pillow",
+  "opencv-python-headless",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+analysis = ["scipy", "matplotlib", "pandas", "psutil"]
+heavy = ["cellpose"]
+
+[tool.setuptools.packages.find]
+include = ["agent*", "app*", "benchmarks*", "contour_io*", "memory*", "provenance*", "segmentation*", "python_app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "heavy: tests requiring external checkpoints, GPUs, or large optional model packages",
+]

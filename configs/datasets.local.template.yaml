@@ -1,0 +1,29 @@
+version: 1
+datasets:
+  medical_3d:
+    msd_task:
+      status: "NOT_CONFIGURED"
+      task_name: "TO_BE_FILLED"
+      data_root: "NOT_CONFIGURED"
+      images_dir: "NOT_CONFIGURED"
+      masks_dir: "NOT_CONFIGURED"
+      image_pattern: "*.nii.gz"
+      mask_pattern: "*.nii.gz"
+      labels: "TO_BE_FILLED"
+      split: "validation"
+      source_url: "TO_BE_FILLED"
+      license: "TO_BE_FILLED"
+      citation: "TO_BE_FILLED"
+  microscopy:
+    cellpose_or_bbbc:
+      status: "NOT_CONFIGURED"
+      dataset_name: "TO_BE_FILLED"
+      data_root: "NOT_CONFIGURED"
+      images_dir: "NOT_CONFIGURED"
+      masks_dir: "NOT_CONFIGURED"
+      image_pattern: "*.png"
+      mask_pattern: "*.png"
+      instance_masks: true
+      source_url: "TO_BE_FILLED"
+      license: "TO_BE_FILLED"
+      citation: "TO_BE_FILLED"

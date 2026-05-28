@@ -1,0 +1,15 @@
+{
+  "name": "cellpose_or_bbbc_template",
+  "dataset": "cellpose_or_bbbc",
+  "data_root": "TO_BE_SET",
+  "dataset_manifest": "configs/datasets.example.yaml",
+  "directory_format": {
+    "images": "images/*.tif",
+    "masks": "masks/*.tif"
+  },
+  "priority": "Cellpose dataset or BBBC first",
+  "optional_templates": ["MoNuSeg", "CPM"],
+  "supported_examples": ["Cellpose dataset", "BBBC", "MoNuSeg", "CPM"],
+  "auto_download": false,
+  "status": "TEMPLATE_ONLY_NOT_RUN"
+}

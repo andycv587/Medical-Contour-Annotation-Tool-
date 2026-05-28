@@ -1,0 +1,65 @@
+microscopy:
+  enabled: false
+  dataset_name: "NOT_CONFIGURED"
+  images_dir: "NOT_CONFIGURED"
+  masks_dir: "NOT_CONFIGURED"
+  image_pattern: "*.png"
+  mask_pattern: "*.png"
+  instance_masks: true
+  channels: [0, 0]
+  max_cases: 10
+  allow_classical_only: true
+
+medical_3d:
+  enabled: false
+  dataset_name: "NOT_CONFIGURED"
+  images_dir: "NOT_CONFIGURED"
+  masks_dir: "NOT_CONFIGURED"
+  image_pattern: "*.nii.gz"
+  mask_pattern: "*.nii.gz"
+  target_label: 1
+  max_cases: 5
+  oracle_bbox_prompt: true
+  allow_classical_only: true
+
+models:
+  cellpose:
+    enabled: false
+    backend_mode: "direct_import"
+    command: "NOT_CONFIGURED"
+    model_type: "cyto"
+    diameter: null
+    channels: [0, 0]
+    device: "cpu"
+    source_url: "https://github.com/MouseLand/cellpose"
+    license: "BSD-3-Clause code; Cellpose-SAM/model/data terms vary, verify before publication"
+  medsam:
+    enabled: false
+    command: "NOT_CONFIGURED"
+    checkpoint_path: "NOT_CONFIGURED"
+    checkpoint_sha256: "NOT_CONFIGURED"
+    device: "cpu"
+    python_executable: "NOT_CONFIGURED"
+    repo_path: "NOT_CONFIGURED"
+    source_url: "https://github.com/bowang-lab/MedSAM"
+    license: "Apache-2.0 code; checkpoint terms must be verified"
+  medsam2:
+    enabled: false
+    command: "NOT_CONFIGURED"
+    checkpoint_path: "NOT_CONFIGURED"
+    checkpoint_sha256: "NOT_CONFIGURED"
+    device: "cpu"
+    python_executable: "NOT_CONFIGURED"
+    repo_path: "NOT_CONFIGURED"
+    source_url: "https://github.com/bowang-lab/MedSAM2"
+    license: "Apache-2.0 code; Hugging Face weights research/education terms must be verified"
+  langsam:
+    enabled: false
+    command: "NOT_CONFIGURED"
+    checkpoint_path: "NOT_CONFIGURED"
+    checkpoint_sha256: "NOT_CONFIGURED"
+    device: "cpu"
+    python_executable: "NOT_CONFIGURED"
+    repo_path: "NOT_CONFIGURED"
+    source_url: "https://github.com/luca-medeiros/lang-segment-anything"
+    license: "Apache-2.0"

@@ -1,0 +1,36 @@
+name: "medical_3d_router_memory_local_template"
+mode: "real_data"
+dataset: "medical_3d"
+dataset_registry_path: "configs/datasets.local.yaml"
+model_registry_path: "configs/model_registry.local.yaml"
+benchmark_config: "benchmarks/configs/medical_3d_msd_local.yaml"
+output_dir: "results/medical_3d_ablation"
+allow_mock_backend: false
+conditions:
+  - name: "classical_only"
+    backend_candidates: [classical]
+    memory_mode: "no_memory"
+  - name: "medsam_bbox_only"
+    backend_candidates: [medsam]
+    prompt_strategy: [bbox_from_ground_truth_for_benchmark_only]
+    memory_mode: "no_memory"
+  - name: "medsam2_propagation"
+    backend_candidates: [medsam2]
+    prompt_strategy: [bbox_from_ground_truth_for_benchmark_only, center_point_from_ground_truth_for_benchmark_only]
+    memory_mode: "no_memory"
+  - name: "router_off"
+    backend_candidates: [classical]
+    memory_mode: "no_memory"
+  - name: "router_on"
+    backend_candidates: [medsam2, medsam, classical]
+    memory_mode: "no_memory"
+  - name: "no_memory"
+    backend_candidates: [medsam2, medsam, classical]
+    memory_mode: "no_memory"
+  - name: "session_memory"
+    backend_candidates: [medsam2, medsam, classical]
+    memory_mode: "short_term_memory"
+  - name: "long_term_memory"
+    backend_candidates: [medsam2, medsam, classical]
+    memory_mode: "long_term_memory"
+status: "NOT_CONFIGURED"

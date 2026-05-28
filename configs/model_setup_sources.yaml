@@ -1,0 +1,26 @@
+version: 1
+models:
+  cellpose:
+    source_url: "https://github.com/MouseLand/cellpose"
+    docs_url: "https://cellpose.readthedocs.io/"
+    install_hint: "python -m pip install cellpose"
+    license: "BSD-3-Clause code; Cellpose-SAM/model/data terms vary, verify current upstream terms before publication"
+    checkpoint_note: "Built-in pretrained models download/cache automatically when Cellpose is used."
+    status: "OPEN_SOURCE_OPTIONAL_BACKEND"
+  langsam:
+    source_url: "https://github.com/luca-medeiros/lang-segment-anything"
+    install_hint: "pip install -U git+https://github.com/luca-medeiros/lang-segment-anything.git"
+    license: "Apache-2.0"
+    checkpoint_note: "May download SAM/GroundingDINO assets automatically, or accept explicit checkpoint paths."
+    status: "OPEN_SOURCE_OPTIONAL_BACKEND"
+  medsam:
+    source_url: "https://github.com/bowang-lab/MedSAM"
+    license: "Apache-2.0 code; checkpoint terms must be verified"
+    checkpoint_note: "Download the official MedSAM checkpoint from upstream instructions and record local path/SHA256."
+    status: "OPEN_SOURCE_OPTIONAL_BACKEND_CHECKPOINT_REQUIRED"
+  medsam2:
+    source_url: "https://github.com/bowang-lab/MedSAM2"
+    checkpoint_url: "https://huggingface.co/wanglab/MedSAM2"
+    license: "Apache-2.0 code; Hugging Face model card states research/education terms for weights"
+    checkpoint_note: "Use upstream download.sh or Hugging Face model files, then record local path/SHA256."
+    status: "OPEN_SOURCE_OPTIONAL_BACKEND_CHECKPOINT_REQUIRED"

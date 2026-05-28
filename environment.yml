@@ -1,0 +1,13 @@
+name: bioimage-contour-annotator
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - nibabel
+  - pillow
+  - opencv
+  - pytest
+  - pip:
+      - -e .

@@ -1,0 +1,16 @@
+version: 1
+experiments:
+  medical_3d:
+    status: "NOT_CONFIGURED"
+    benchmark_config: "benchmarks/configs/medical_3d_msd_local.template.yaml"
+    dataset_key: "medical_3d.msd_task"
+    model_registry_path: "configs/model_registry.local.yaml"
+    dataset_registry_path: "configs/datasets.local.yaml"
+    output_dir: "results/medical_3d"
+  microscopy:
+    status: "NOT_CONFIGURED"
+    benchmark_config: "benchmarks/configs/microscopy_cellpose_or_bbbc_local.template.yaml"
+    dataset_key: "microscopy.cellpose_or_bbbc"
+    model_registry_path: "configs/model_registry.local.yaml"
+    dataset_registry_path: "configs/datasets.local.yaml"
+    output_dir: "results/microscopy"

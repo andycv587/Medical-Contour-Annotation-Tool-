@@ -9,6 +9,32 @@ ENV/
 
 # Local / bridge test artifacts
 python_app/.tmp_bridge_test/
+python_app/.tmp_app_screenshot*.png
+
+# Reproducibility outputs generated locally
+results/
+*.egg-info/
+.pytest_cache/
+*.aux
+*.log
+*.out
+
+# Local datasets, checkpoints, and model caches
+.data/
+.models/
+.model_cache/
+Examples/*.tar
+paper_assets/progress_report/paper_assets/
+
+# Private local configs and manual-study artifacts
+configs/*.local.yaml
+baseline_outputs/
+*_events.jsonl
+*.gui_event.json
+.model_envs/
+
+# Local model/checkpoint configuration
+configs/model_registry.local.*
 
 # Editor / OS
 .idea/

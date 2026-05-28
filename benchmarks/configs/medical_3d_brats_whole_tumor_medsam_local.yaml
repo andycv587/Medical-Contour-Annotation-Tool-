@@ -1,0 +1,20 @@
+name: "medical_3d_brats_whole_tumor_medsam_local"
+dataset: "medical_3d"
+dataset_registry_path: "configs/datasets.local.yaml"
+model_registry_path: "configs/model_registry.local.yaml"
+output_dir: "results/medical_3d_brats_whole_tumor_medsam"
+max_cases: 1
+target_label: -1
+backend_candidates:
+  - medsam
+  - classical
+prompt_strategy:
+  - bbox_from_ground_truth_for_benchmark_only
+memory_mode: "no_memory"
+save_masks: true
+save_provenance: true
+allow_mock_backend: false
+allow_classical_baseline: true
+allow_classical_only: false
+oracle_prompt_disclosure: "Ground truth is used only to generate standardized prompts for benchmark comparability; this is not autonomous segmentation."
+status: "CONFIGURED_LOCAL_SMOKE"

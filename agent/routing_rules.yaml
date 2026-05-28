@@ -1,0 +1,16 @@
+rules:
+  - id: medical_3d_with_bbox_or_seed
+    when: "image_type_guess == medical_volume and (bbox or seed)"
+    prefer: ["medsam2", "medsam", "classical", "mock"]
+  - id: microscopy_prompt
+    when: "prompt contains cells/nuclei/DAPI/microscopy/fluorescence/histology"
+    prefer: ["cellpose", "classical", "langsam", "mock"]
+  - id: text_prompt_2d
+    when: "2D image with text prompt"
+    prefer: ["langsam", "cellpose", "classical", "mock"]
+  - id: bbox_2d_medical
+    when: "2D medical image with bbox prompt"
+    prefer: ["medsam", "medsam2", "classical", "mock"]
+  - id: default_fallback
+    when: "no preferred model available"
+    prefer: ["classical", "mock"]
